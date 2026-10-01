@@ -2,9 +2,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "lucasarnaiz06-afk.github.io",
+    "title": "Lucas Arnaiz",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+    "text": "Hey there! I’m Lucas Arnaiz, a sophomore at Pomona college pursuing a double major in math and computer science. In my free time, I like to surf, snowboard, play games with my friends, listen to music, read, and watch movies. I love math and am a very naturally curious person.\nLink to this website’s github repo"
   },
   {
     "objectID": "about.html",
@@ -12,5 +12,47 @@
     "title": "About",
     "section": "",
     "text": "About this site"
+  },
+  {
+    "objectID": "coffee.html",
+    "href": "coffee.html",
+    "title": "Coffee Ratings",
+    "section": "",
+    "text": "Introduction This analysis explores the Coffee Ratings dataset from TidyTuesday. The Coffee Ratings dataset contains reviews and scores of different coffees from around the world.\nData Sources: - TidyTuesday Coffee Ratings - Original Data: Coffee Quality Institute (CQI) via James LeDoux.\nAnalysis\n\nlibrary(tidyverse)\n\n# Load data\ncoffee_ratings &lt;- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')\n\n# find the top countries by counting them\ncoffee_counts &lt;- coffee_ratings |&gt; \n  group_by(country_of_origin) |&gt; \n  summarize(total = n()) |&gt; \n  arrange(desc(total)) |&gt; \n  head(10)\n\nggplot(data = coffee_counts, aes(x = country_of_origin, y = total)) +\n  geom_col() +\n  coord_flip() + \n  labs(\n    title = \"Where do the most coffee ratings come from?\",\n    x = \"Country\",\n    y = \"Number of Ratings\"\n  )"
+  },
+  {
+    "objectID": "coffee.html#introduction",
+    "href": "coffee.html#introduction",
+    "title": "Coffee Ratings",
+    "section": "",
+    "text": "This analysis explores the Coffee Ratings dataset from TidyTuesday. The Coffee Ratings dataset contains reviews and scores of different coffees from around the world.\nData Sources: - TidyTuesday Coffee Ratings - Original Data: Coffee Quality Institute (CQI) via James LeDoux."
+  },
+  {
+    "objectID": "coffee.html#analysis",
+    "href": "coffee.html#analysis",
+    "title": "Coffee Ratings",
+    "section": "Analysis",
+    "text": "Analysis\n\nlibrary(tidyverse)\n\n# Load data\ncoffee_ratings &lt;- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')\n\n# find the top countries by counting them\ncoffee_counts &lt;- coffee_ratings |&gt; \n  group_by(country_of_origin) |&gt; \n  summarize(total = n()) |&gt; \n  arrange(desc(total)) |&gt; \n  head(10)\n\nggplot(data = coffee_counts, aes(x = country_of_origin, y = total)) +\n  geom_col() +\n  coord_flip() + \n  labs(\n    title = \"Where do the most coffee ratings come from?\",\n    x = \"Country\",\n    y = \"Number of Ratings\"\n  )"
+  },
+  {
+    "objectID": "lego.html",
+    "href": "lego.html",
+    "title": "Lego Sets over Time",
+    "section": "",
+    "text": "Introduction This analysis explores Lego sets over the years to see how the number of sets produced has grown over time.\nData Sources: - TidyTuesday Lego Sets - Original Data: Rebrickable\nAnalysis\n\nlibrary(tidyverse)\n\n# Load data\nlego_sets &lt;- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-09-06/sets.csv.gz')\n\n# count sets per year\nsets_per_year &lt;- lego_sets |&gt;\n  group_by(year) |&gt;\n  summarize(total_sets = n())\n\nggplot(data = sets_per_year, aes(x = year, y = total_sets)) +\n  geom_line() +\n  labs(\n    title = \"Lego Sets over Time\",\n    x = \"Year\",\n    y = \"Total Sets\"\n  )"
+  },
+  {
+    "objectID": "lego.html#introduction",
+    "href": "lego.html#introduction",
+    "title": "Lego Sets over Time",
+    "section": "",
+    "text": "This analysis explores Lego sets over the years to see how the number of sets produced has grown over time.\nData Sources: - TidyTuesday Lego Sets - Original Data: Rebrickable"
+  },
+  {
+    "objectID": "lego.html#analysis",
+    "href": "lego.html#analysis",
+    "title": "Lego Sets over Time",
+    "section": "Analysis",
+    "text": "Analysis\n\nlibrary(tidyverse)\n\n# Load data\nlego_sets &lt;- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-09-06/sets.csv.gz')\n\n# count sets per year\nsets_per_year &lt;- lego_sets |&gt;\n  group_by(year) |&gt;\n  summarize(total_sets = n())\n\nggplot(data = sets_per_year, aes(x = year, y = total_sets)) +\n  geom_line() +\n  labs(\n    title = \"Lego Sets over Time\",\n    x = \"Year\",\n    y = \"Total Sets\"\n  )"
   }
 ]

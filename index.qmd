@@ -1,7 +1,17 @@
 ---
-title: "lucasarnaiz06-afk.github.io"
+title: "Lucas Arnaiz"
+image: me.png
+about:
+    template: jolla
+    links:
+        - text: LinkedIn
+          href: https://www.linkedin.com/in/lucas-arnaiz/
+          target: _blank
+        - text: GitHub
+          href: https://github.com/lucasarnaiz06-afk
+          target: _blank 
 ---
 
-This is a Quarto website.
+Hey there! I'm Lucas Arnaiz, a sophomore at Pomona college pursuing a double major in math and computer science. In my free time, I like to surf, snowboard, play games with my friends, listen to music, read, and watch movies. I love math and am a very naturally curious person. 
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+[Link to this website's github repo](https://github.com/lucasarnaiz06-afk/lucasarnaiz06-afk.github.io)

@@ -3,20 +3,23 @@ project:
   output-dir: docs
 
 website:
-  title: "lucasarnaiz06-afk.github.io"
+  title: "Lucas Arnaiz"
   navbar:
     left:
       - href: index.qmd
         text: Home
-      - about.qmd
+      - text: "Data Viz"
+        menu:
+          - text: "Coffee Ratings"
+            href: coffee.qmd
+          - text: "Lego Sets"
+            href: lego.qmd
 
 format:
   html:
     theme:
-      - cosmo
-      - brand
+      light: minty
+      dark: solar
     css: styles.css
     toc: true
-
-
-
+    page-layout: full

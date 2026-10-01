@@ -1,0 +1,40 @@
+---
+title: "Lego Sets over Time"
+description: |
+  Analysis of Lego Sets data from TidyTuesday
+author: "Lucas Arnaiz"
+date: "2026-09-30"
+format: html
+execute: 
+  warning: false
+  message: false
+---
+
+**Introduction**
+This analysis explores Lego sets over the years to see how the number of sets produced has grown over time.
+
+**Data Sources:**
+- [TidyTuesday Lego Sets](https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-09-06/readme.md)
+- Original Data: [Rebrickable](https://rebrickable.com/downloads/)
+
+**Analysis**
+
+```{r}
+library(tidyverse)
+
+# Load data
+lego_sets <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-09-06/sets.csv.gz')
+
+# count sets per year
+sets_per_year <- lego_sets |>
+  group_by(year) |>
+  summarize(total_sets = n())
+
+ggplot(data = sets_per_year, aes(x = year, y = total_sets)) +
+  geom_line() +
+  labs(
+    title = "Lego Sets over Time",
+    x = "Year",
+    y = "Total Sets"
+  )
+```

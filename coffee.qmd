@@ -1,0 +1,43 @@
+---
+title: "Coffee Ratings"
+description: |
+  Analysis of Coffee Ratings data from TidyTuesday
+author: "Lucas Arnaiz"
+date: "2026-09-30"
+format: html
+execute: 
+  warning: false
+  message: false
+---
+
+**Introduction**
+This analysis explores the Coffee Ratings dataset from TidyTuesday. The Coffee Ratings dataset contains reviews and scores of different coffees from around the world. 
+
+**Data Sources:**
+- [TidyTuesday Coffee Ratings](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-07-07/readme.md)
+- Original Data: [Coffee Quality Institute (CQI)](https://database.coffeeinstitute.org/) via James LeDoux.
+
+**Analysis**
+
+```{r}
+library(tidyverse)
+
+# Load data
+coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
+
+# find the top countries by counting them
+coffee_counts <- coffee_ratings |> 
+  group_by(country_of_origin) |> 
+  summarize(total = n()) |> 
+  arrange(desc(total)) |> 
+  head(10)
+
+ggplot(data = coffee_counts, aes(x = country_of_origin, y = total)) +
+  geom_col() +
+  coord_flip() + 
+  labs(
+    title = "Where do the most coffee ratings come from?",
+    x = "Country",
+    y = "Number of Ratings"
+  )
+```
