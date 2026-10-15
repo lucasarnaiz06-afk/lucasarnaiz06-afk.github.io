@@ -70,7 +70,11 @@ quotes |>
 
 **When Was Satoshi Most Active?**
 
-This plot shows the number of replies per month, from December '09 to December '10. The peak is July (31) and August 2010 (42). March–April 2010 has no replies, and the data stops in December 2010
+This plot shows the number of replies per month, from December '09 to December '10. The peak is July (31) and August 2010 (42). March–April 2010 has no replies, and the data stops in December 2010.
+
+This peak lines up with Bitcoin’s first big wave of public attention, following a Slashdot article posted July 2010. December 2010 is when Satoshi made his last forum post.
+
+Limitation: the dates belong to the posts Satoshi replied to, not the reply itself. 
 
 ```{r}
 #now, lets plot the replies over time, by month
@@ -88,7 +92,3 @@ quotes |>
        subtitle = "Based on the date of the first quoted post in each reply",
        x = "Month", y = "Number of replies")
 ```
-
-
-
-**Conclusion**
