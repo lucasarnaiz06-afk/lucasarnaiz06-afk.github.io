@@ -10,3 +10,11 @@ execute:
   message: false
 ---
 
+**Introduction**
+This analysis explores the text that Satoshi Nakamoto, the creator of Bitcoin, left behind on forums and through emails.
+
+**Data Sources:**
+This dataset contains a collection of messages attributed to Satoshi Nakamoto, the pseudonymous creator of Bitcoin. Sourced from Bitcoin Forum. This dataset provides insights into the thoughts, technical discussions, and philosophies of one of the most enigmatic figures in modern finance and cryptography.
+- [Kaggle Link](https://www.kaggle.com/datasets/leandrowrzecionek/satoshi-nakamato-messages)
+
+
