@@ -39,7 +39,7 @@
     "href": "lego.html",
     "title": "Lego Sets over Time",
     "section": "",
-    "text": "Introduction This analysis explores Lego sets over the years to see how the number of sets produced has grown over time.\nData Sources: - TidyTuesday Lego Sets - Original Data: Rebrickable\nAnalysis\n\nlibrary(tidyverse)\n\n# Load data\nlego_sets &lt;- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-09-06/sets.csv.gz')\n\n# count sets per year\nsets_per_year &lt;- lego_sets |&gt;\n  group_by(year) |&gt;\n  summarize(total_sets = n())\n\nggplot(data = sets_per_year, aes(x = year, y = total_sets)) +\n  geom_line() +\n  labs(\n    title = \"Lego Sets over Time\",\n    x = \"Year\",\n    y = \"Total Sets\"\n  )"
+    "text": "Introduction This analysis explores Lego sets over the years to see how the number of sets produced has grown over time.\nData Sources: - TidyTuesday Lego Sets - Original Data: Rebrickable\nAnalysis\n\n\nCode\nlibrary(tidyverse)\n\n# Load data\nlego_sets &lt;- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-09-06/sets.csv.gz')\n\n# count sets per year\nsets_per_year &lt;- lego_sets |&gt;\n  group_by(year) |&gt;\n  summarize(total_sets = n())\n\nggplot(data = sets_per_year, aes(x = year, y = total_sets)) +\n  geom_line() +\n  labs(\n    title = \"Lego Sets over Time\",\n    x = \"Year\",\n    y = \"Total Sets\"\n  )"
   },
   {
     "objectID": "lego.html#introduction",
@@ -54,5 +54,12 @@
     "title": "Lego Sets over Time",
     "section": "Analysis",
     "text": "Analysis\n\nlibrary(tidyverse)\n\n# Load data\nlego_sets &lt;- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-09-06/sets.csv.gz')\n\n# count sets per year\nsets_per_year &lt;- lego_sets |&gt;\n  group_by(year) |&gt;\n  summarize(total_sets = n())\n\nggplot(data = sets_per_year, aes(x = year, y = total_sets)) +\n  geom_line() +\n  labs(\n    title = \"Lego Sets over Time\",\n    x = \"Year\",\n    y = \"Total Sets\"\n  )"
+  },
+  {
+    "objectID": "satoshi.html",
+    "href": "satoshi.html",
+    "title": "Satoshi Nakamoto Text Analysis",
+    "section": "",
+    "text": "Introduction This analysis explores the text that Satoshi Nakamoto, the creator of Bitcoin, left behind on forums and through emails.\nData Sources: This dataset contains a collection of messages attributed to Satoshi Nakamoto, the pseudonymous creator of Bitcoin. Sourced from Bitcoin Forum. This dataset provides insights into the thoughts, technical discussions, and philosophies of one of the most enigmatic figures in modern finance and cryptography. - Kaggle Dataset via Leandro Wrzecionek\nAnalysis\n\n\nCode\nlibrary(tidyverse)\n\nsatoshi &lt;- read_csv(\"data/satoshi_messages.csv\") #load the data\n\n#clean the data\nsatoshi_clean &lt;- satoshi |&gt;\n  filter(!is.na(Message)) |&gt;\n  mutate(Message = str_replace_all(Message, \"\\u00a0\", \" \"), #this dataset contains NO-BREAK SPACES, so I replaced them with normal spaces to make it easier down the road\n         has_quote = str_detect(Message, \"Quote from:\")) #creates a new column, has_quote, marking whether the message was a reply to someone else's post"
   }
 ]

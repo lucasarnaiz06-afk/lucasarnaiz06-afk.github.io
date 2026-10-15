@@ -15,6 +15,20 @@ This analysis explores the text that Satoshi Nakamoto, the creator of Bitcoin, l
 
 **Data Sources:**
 This dataset contains a collection of messages attributed to Satoshi Nakamoto, the pseudonymous creator of Bitcoin. Sourced from Bitcoin Forum. This dataset provides insights into the thoughts, technical discussions, and philosophies of one of the most enigmatic figures in modern finance and cryptography.
-- [Kaggle Link](https://www.kaggle.com/datasets/leandrowrzecionek/satoshi-nakamato-messages)
+- [Kaggle Dataset](https://www.kaggle.com/datasets/leandrowrzecionek/satoshi-nakamato-messages) via Leandro Wrzecionek
+
+**Analysis**
+
+```{r}
+library(tidyverse)
+
+satoshi <- read_csv("data/satoshi_messages.csv") #load the data
+
+#clean the data
+satoshi_clean <- satoshi |>
+  filter(!is.na(Message)) |>
+  mutate(Message = str_replace_all(Message, "\u00a0", " "), #this dataset contains NO-BREAK SPACES, so I replaced them with normal spaces to make it easier down the road
+         has_quote = str_detect(Message, "Quote from:")) #creates a new column, has_quote, marking whether the message was a reply to someone else's post
 
 
+```
