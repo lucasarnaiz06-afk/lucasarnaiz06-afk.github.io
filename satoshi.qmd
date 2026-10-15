@@ -30,5 +30,33 @@ satoshi_clean <- satoshi |>
   mutate(Message = str_replace_all(Message, "\u00a0", " "), #this dataset contains NO-BREAK SPACES, so I replaced them with normal spaces to make it easier down the road
          has_quote = str_detect(Message, "Quote from:")) #creates a new column, has_quote, marking whether the message was a reply to someone else's post
 
+#isolate for replies
+quotes <- satoshi_clean |>
+  filter(has_quote) |> # keep only the messages where Satoshi quotes someone
+  mutate(header = str_extract(Message, "Quote from: .+"), # pull out the first "Quote from: ..." line in each message, .+ stops at the end of a line
+         date = mdy(str_extract(header, "[A-Z][a-z]+ \\d{1,2}, \\d{4}")), # find the date (capitalized month, 1–2 digit day, comma, 4-digit year)
+         
+         # " <word> <Month> <day>, <year>", so the date part isn't included
+         user = str_extract(header, "(?<=Quote from: ).+(?= \\w+ [A-Z][a-z]+ \\d{1,2}, \\d{4})")) |> # lookbehind (?<=Quote from: ): start right after "Quote from: ", .+ will pull the characters that make up the username
+            # lookahead (?= \\w+ [A-Z][a-z]+ \\d{1,2}, \\d{4}): stop just before WORD MONTH DAY YEAR. This is becaue the format for the forum replies goes: Quote from: USERNAME on DATE. 
+        #So thus, we have extracted the username that Satoshi is replying to
+  filter(!is.na(date)) #exclude the few cases where there is no date. 
+
+#now lets clean up our quotes for plotting. 
+quotes |>
+  # keep users with 4+ replies; lump everyone else into "Other"
+  mutate(user = fct_lump_min(user, min = 4),
+         # order the users from most to fewest replies
+         user = fct_infreq(user),
+         # move "Other" to the end so it doesn't sit with the top users
+         user = fct_relevel(user, "Other", after = Inf)) |> 
+  # fct_rev() flips the order so the most-replied-to user is at the top
+  ggplot(aes(y = fct_rev(user))) +
+  # geom_bar() counts the rows (replies) for each user
+  geom_bar(fill = "#F7931A") + #bitcoin orange
+  labs(title = "Who Satoshi Replied To Most Often on the Forum",
+       subtitle = "First user quoted in each reply; users with fewer than 4 replies grouped as \"Other\"",
+       x = "Number of replies", y = "Forum username")
+
 
 ```
