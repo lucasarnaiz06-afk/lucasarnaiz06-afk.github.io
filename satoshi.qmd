@@ -1,0 +1,12 @@
+---
+title: "Satoshi Nakamoto Text Analysis"
+description: |
+  Analysis of Satoshi Nakamoto's forum posts and emails
+author: "Lucas Arnaiz"
+date: "2026-10-14"
+format: html
+execute: 
+  warning: false
+  message: false
+---
+

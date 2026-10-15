@@ -14,6 +14,7 @@ website:
             href: coffee.qmd
           - text: "Lego Sets"
             href: lego.qmd
+          - text: "Satoshi"
 
 format:
   html:
