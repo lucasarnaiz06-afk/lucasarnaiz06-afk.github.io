@@ -378,7 +378,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p><strong>Introduction</strong> This analysis explores the text that Satoshi Nakamoto, the creator of Bitcoin, left behind on forums and through emails.</p>
-<p><strong>Data Sources:</strong> This dataset contains a collection of messages attributed to Satoshi Nakamoto, the pseudonymous creator of Bitcoin. Sourced from Bitcoin Forum. This dataset provides insights into the thoughts, technical discussions, and philosophies of one of the most enigmatic figures in modern finance and cryptography. - <a href="https://www.kaggle.com/datasets/leandrowrzecionek/satoshi-nakamato-messages">Kaggle Dataset</a> via Leandro Wrzecionek</p>
+<p><strong>Data Sources:</strong> This dataset contains a collection of messages attributed to Satoshi Nakamoto, the pseudonymous creator of Bitcoin. Sourced from Bitcoin Forum. This dataset provides insights into the thoughts, technical discussions, and philosophies of one of the most enigmatic figures in modern finance and cryptography. - <a href="https://www.kaggle.com/datasets/leandrowrzecionek/satoshi-nakamato-messages">Kaggle Dataset</a> via Leandro Wrzecionek - Original source: Satoshi Nakamoto’s posts on the Bitcoin Forum (BitcoinTalk), archived by the <a href="https://satoshi.nakamotoinstitute.org/posts/">Satoshi Nakamoto Institute</a></p>
 <p><strong>Analysis</strong></p>
 <div class="cell">
 <details class="code-fold">
@@ -398,37 +398,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(has_quote) <span class="sc">|&gt;</span> <span class="co"># keep only the messages where Satoshi quotes someone</span></span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">header =</span> <span class="fu">str_extract</span>(Message, <span class="st">"Quote from: .+"</span>), <span class="co"># pull out the first "Quote from: ..." line in each message, .+ stops at the end of a line</span></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">date =</span> <span class="fu">mdy</span>(<span class="fu">str_extract</span>(header, <span class="st">"[A-Z][a-z]+ </span><span class="sc">\\</span><span class="st">d{1,2}, </span><span class="sc">\\</span><span class="st">d{4}"</span>)), <span class="co"># find the date (capitalized month, 1–2 digit day, comma, 4-digit year)</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>         </span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>         <span class="co"># " &lt;word&gt; &lt;Month&gt; &lt;day&gt;, &lt;year&gt;", so the date part isn't included</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>         <span class="at">user =</span> <span class="fu">str_extract</span>(header, <span class="st">"(?&lt;=Quote from: ).+(?= </span><span class="sc">\\</span><span class="st">w+ [A-Z][a-z]+ </span><span class="sc">\\</span><span class="st">d{1,2}, </span><span class="sc">\\</span><span class="st">d{4})"</span>)) <span class="sc">|&gt;</span> <span class="co"># lookbehind (?&lt;=Quote from: ): start right after "Quote from: ", .+ will pull the characters that make up the username</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>            <span class="co"># lookahead (?= \\w+ [A-Z][a-z]+ \\d{1,2}, \\d{4}): stop just before WORD MONTH DAY YEAR. This is becaue the format for the forum replies goes: Quote from: USERNAME on DATE. </span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        <span class="co">#So thus, we have extracted the username that Satoshi is replying to</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(date)) <span class="co">#exclude the few cases where there is no date. </span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co">#now lets clean up our quotes for plotting. </span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>quotes <span class="sc">|&gt;</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># keep users with 4+ replies; lump everyone else into "Other"</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">user =</span> <span class="fu">fct_lump_min</span>(user, <span class="at">min =</span> <span class="dv">4</span>),</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>         <span class="co"># order the users from most to fewest replies</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>         <span class="at">user =</span> <span class="fu">fct_infreq</span>(user),</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>         <span class="co"># move "Other" to the end so it doesn't sit with the top users</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>         <span class="at">user =</span> <span class="fu">fct_relevel</span>(user, <span class="st">"Other"</span>, <span class="at">after =</span> <span class="cn">Inf</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fct_rev() flips the order so the most-replied-to user is at the top</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">fct_rev</span>(user))) <span class="sc">+</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_bar() counts the rows (replies) for each user</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"#F7931A"</span>) <span class="sc">+</span> <span class="co">#bitcoin orange</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Who Satoshi Replied To Most Often on the Forum"</span>,</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"First user quoted in each reply; users with fewer than 4 replies grouped as </span><span class="sc">\"</span><span class="st">Other</span><span class="sc">\"</span><span class="st">"</span>,</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Number of replies"</span>, <span class="at">y =</span> <span class="st">"Forum username"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">user =</span> <span class="fu">str_extract</span>(header, <span class="st">"(?&lt;=Quote from: ).+(?= </span><span class="sc">\\</span><span class="st">w+ [A-Z][a-z]+ </span><span class="sc">\\</span><span class="st">d{1,2}, </span><span class="sc">\\</span><span class="st">d{4})"</span>)) <span class="sc">|&gt;</span> <span class="co"># lookbehind (?&lt;=Quote from: ): start right after "Quote from: ", .+ will pull the characters that make up the username</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>            <span class="co"># lookahead (?= \\w+ [A-Z][a-z]+ \\d{1,2}, \\d{4}): stop just before WORD MONTH DAY YEAR. This is becaue the format for the forum replies goes: Quote from: USERNAME on DATE. </span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        <span class="co">#So thus, we have extracted the username that Satoshi is replying to</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(date)) <span class="co">#exclude one case where there is no date</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p><strong>Who Did Satoshi Reply To?</strong></p>
+<p>This plot shows a bar for each user that Satoshi replied to at least 4 times, sorted from most replies to fewest replies. Everyone under 4 replies got grouped into “other”.</p>
+<p>knightmb (11), gavinandresen (9), jgarzik (8) and theymos (7) got the most replies. Gavin Andresen later became Bitcoin’s lead developer, and Jeff Garzik (jgarzik) became a core developer. Satoshi himself appears 4 times, because he sometimes quoted his own earlier posts. Other is by far the largest bar, with 80 replies spread across 64 users. This means Satoshi responded to a wide community rather than a few insiders.</p>
+<p>Limitation: Only the first person quoted in each reply gets counted.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#now lets plot the number of replies per user</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>quotes <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># keep users with 4+ replies; lump everyone else into "Other"</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">user =</span> <span class="fu">fct_lump_min</span>(user, <span class="at">min =</span> <span class="dv">4</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>         <span class="co"># order the users from most to fewest replies</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">user =</span> <span class="fu">fct_infreq</span>(user),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>         <span class="co"># move "Other" to the end so it doesn't sit with the top users</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">user =</span> <span class="fu">fct_relevel</span>(user, <span class="st">"Other"</span>, <span class="at">after =</span> <span class="cn">Inf</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fct_rev() flips the order so the most-replied-to user is at the top</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">fct_rev</span>(user))) <span class="sc">+</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_bar() counts the rows (replies) for each user</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"#F7931A"</span>) <span class="sc">+</span> <span class="co">#bitcoin orange</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Who Satoshi Replied To Most Often on the Forum"</span>,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"First user quoted in each reply; users with fewer than 4 replies grouped as </span><span class="sc">\"</span><span class="st">Other</span><span class="sc">\"</span><span class="st">"</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Number of replies"</span>, <span class="at">y =</span> <span class="st">"Forum username"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="satoshi_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="satoshi_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+<p><strong>When Was Satoshi Most Active?</strong></p>
+<p>This plot shows the number of replies per month, from December ’09 to December ’10. The peak is July (31) and August 2010 (42). March–April 2010 has no replies, and the data stops in December 2010</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#now, lets plot the replies over time, by month</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>quotes <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># round each date down to the first day of its month</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">floor_date</span>(date, <span class="st">"month"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># count how many replies fall in each month</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(month) <span class="sc">|&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_col() uses the counts we already calculated as bar heights</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#F7931A"</span>) <span class="sc">+</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># label the x-axis every 2 months as "Mon YYYY"</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_labels =</span> <span class="st">"%b %Y"</span>, <span class="at">date_breaks =</span> <span class="st">"2 months"</span>) <span class="sc">+</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"When Were the Posts Satoshi Replied To Written?"</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Based on the date of the first quoted post in each reply"</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Month"</span>, <span class="at">y =</span> <span class="st">"Number of replies"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="satoshi_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Conclusion</strong></p>
 
 
 

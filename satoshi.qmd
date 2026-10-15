@@ -16,6 +16,7 @@ This analysis explores the text that Satoshi Nakamoto, the creator of Bitcoin, l
 **Data Sources:**
 This dataset contains a collection of messages attributed to Satoshi Nakamoto, the pseudonymous creator of Bitcoin. Sourced from Bitcoin Forum. This dataset provides insights into the thoughts, technical discussions, and philosophies of one of the most enigmatic figures in modern finance and cryptography.
 - [Kaggle Dataset](https://www.kaggle.com/datasets/leandrowrzecionek/satoshi-nakamato-messages) via Leandro Wrzecionek
+- Original source: Satoshi Nakamoto's posts on the Bitcoin Forum (BitcoinTalk), archived by the [Satoshi Nakamoto Institute](https://satoshi.nakamotoinstitute.org/posts/)
 
 **Analysis**
 
@@ -35,14 +36,22 @@ quotes <- satoshi_clean |>
   filter(has_quote) |> # keep only the messages where Satoshi quotes someone
   mutate(header = str_extract(Message, "Quote from: .+"), # pull out the first "Quote from: ..." line in each message, .+ stops at the end of a line
          date = mdy(str_extract(header, "[A-Z][a-z]+ \\d{1,2}, \\d{4}")), # find the date (capitalized month, 1–2 digit day, comma, 4-digit year)
-         
-         # " <word> <Month> <day>, <year>", so the date part isn't included
          user = str_extract(header, "(?<=Quote from: ).+(?= \\w+ [A-Z][a-z]+ \\d{1,2}, \\d{4})")) |> # lookbehind (?<=Quote from: ): start right after "Quote from: ", .+ will pull the characters that make up the username
             # lookahead (?= \\w+ [A-Z][a-z]+ \\d{1,2}, \\d{4}): stop just before WORD MONTH DAY YEAR. This is becaue the format for the forum replies goes: Quote from: USERNAME on DATE. 
         #So thus, we have extracted the username that Satoshi is replying to
-  filter(!is.na(date)) #exclude the few cases where there is no date. 
+  filter(!is.na(date)) #exclude one case where there is no date
+```
 
-#now lets clean up our quotes for plotting. 
+**Who Did Satoshi Reply To?**
+
+This plot shows a bar for each user that Satoshi replied to at least 4 times, sorted from most replies to fewest replies. Everyone under 4 replies got grouped into "other". 
+
+knightmb (11), gavinandresen (9), jgarzik (8) and theymos (7) got the most replies. Gavin Andresen later became Bitcoin’s lead developer, and Jeff Garzik (jgarzik) became a core developer. Satoshi himself appears 4 times, because he sometimes quoted his own earlier posts. Other is by far the largest bar, with 80 replies spread across 64 users. This means Satoshi responded to a wide community rather than a few insiders. 
+
+Limitation: Only the first person quoted in each reply gets counted. 
+
+```{r}
+#now lets plot the number of replies per user
 quotes |>
   # keep users with 4+ replies; lump everyone else into "Other"
   mutate(user = fct_lump_min(user, min = 4),
@@ -57,6 +66,29 @@ quotes |>
   labs(title = "Who Satoshi Replied To Most Often on the Forum",
        subtitle = "First user quoted in each reply; users with fewer than 4 replies grouped as \"Other\"",
        x = "Number of replies", y = "Forum username")
-
-
 ```
+
+**When Was Satoshi Most Active?**
+
+This plot shows the number of replies per month, from December '09 to December '10. The peak is July (31) and August 2010 (42). March–April 2010 has no replies, and the data stops in December 2010
+
+```{r}
+#now, lets plot the replies over time, by month
+quotes |>
+  # round each date down to the first day of its month
+  mutate(month = floor_date(date, "month")) |>
+  # count how many replies fall in each month
+  count(month) |>
+  ggplot(aes(x = month, y = n)) +
+  # geom_col() uses the counts we already calculated as bar heights
+  geom_col(fill = "#F7931A") +
+  # label the x-axis every 2 months as "Mon YYYY"
+  scale_x_date(date_labels = "%b %Y", date_breaks = "2 months") +
+  labs(title = "When Were the Posts Satoshi Replied To Written?",
+       subtitle = "Based on the date of the first quoted post in each reply",
+       x = "Month", y = "Number of replies")
+```
+
+
+
+**Conclusion**
