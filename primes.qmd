@@ -12,7 +12,7 @@ execute:
 
 **Introduction**
 
-This simulation plans to tackle some of the mysterious properties of prime numbers. The main question that drives this analysis is: If you pick a random positive integer near N, how likely is it that N is prime, and how does that change with N? Proved in 1896, the Prime Number Theorem states that the probability is about 1/ln(N). A simulation can be helpful for checking these values, because as N grows, it becomes difficult to calculate whether every number is prime. Instead, we can take a random sample of the numbers between N and 2N, test those for primality, and compare that result to 1/ln(N). 
+This simulation plans to tackle some of the mysterious properties of prime numbers. The main question that drives this analysis is: If you pick a random positive integer near N, how likely is it that it is prime, and how does that change with N? Proved in 1896, the Prime Number Theorem states that the probability is about 1/ln(N). A simulation can be helpful for checking these values, because as N grows, it becomes difficult to calculate whether every number is prime. Instead, we can take a random sample of the numbers between N and 2N, test those for primality, and compare that result to 1/ln(N). 
 
 **Simulation**
 
