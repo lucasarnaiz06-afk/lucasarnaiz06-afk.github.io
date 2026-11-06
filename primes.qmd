@@ -1,0 +1,74 @@
+---
+title: "How Common Are Primes?"
+description: |
+  Estimating the probability that a random integer near N is prime, using simulation
+author: "Lucas Arnaiz"
+date: "2026-11-05"
+format: html
+execute: 
+  warning: false
+  message: false
+---
+
+**Introduction**
+
+This simulation plans to tackle some of the mysterious properties of prime numbers. The main question that drives this analysis is: If you pick a random positive integer near N, how likely is it that N is prime, and how does that change with N? Proved in 1896, the Prime Number Theorem states that the probability is about 1/ln(N). A simulation can be helpful for checking these values, because as N grows, it becomes difficult to calculate whether every number is prime. Instead, we can take a random sample of the numbers between N and 2N, test those for primality, and compare that result to 1/ln(N). 
+
+**Simulation**
+
+
+The two functions that I wrote are is_prime, and prop_prime. is_prime takes an integer, and if it's prime returns TRUE, otherwise returns FALSE. prop_prime takes an integer N, and then randomly picks 1,000 integers between N and 2N, each number being equally likely, then returns the proportion of prime numbers chosen. 
+
+I mapped these functions because for all the randomly selected 1,000 integers, we want to test if they are prime, so we can use map_lgl on a vector of all of these integers to get a vector that tells us which of the integers are prime. Putting is_prime and prop_prime together, I used map_dbl to repeat this estimate for many values of N, (10^2 through 10^12). This can help us see how the probability changes as N increases. 
+
+```{r}
+library(tidyverse)
+set.seed(47) # same random numbers every time the page renders
+
+# TRUE if n is prime, FALSE if n is composite. This algorithm just checks
+# if any number up to sqrt(n) is a divisor. 
+is_prime <- function(n) {
+  if (n < 2) return(FALSE)       # 0 and 1 are not prime
+  d <- 2
+  while (d * d <= n) {           # only need to check divisors up to sqrt(n)
+    if (n %% d == 0) return(FALSE) # found a divisor, so n is not prime
+    d <- d + 1
+  }
+  TRUE                           # no divisor found, so n is prime
+}
+
+# pick n_samples random integers between N and 2N
+# Then, returns the proportion that are prime
+prop_prime <- function(N, n_samples = 1000) {
+  samples <- N + sample.int(N, n_samples, replace = TRUE) - 1
+  mean(map_lgl(samples, is_prime))
+}
+
+# This just runs the simulation for N = 10^2, 10^3, ..., 10^12
+prime_sims <- tibble(N = 10^(2:12)) |>
+  mutate(estimate = map_dbl(N, prop_prime))
+```
+
+**Results**
+
+On our plot, the dots are our simulated estimates of the likelihood of a number being prime around N, while the line is the function 1/ln(N). Note that the x-axis is on a logarithmic scale. According to the simulated data and our function, the share of primes falls steadily as N increases, going from about 20% near N=100 to about 4% near N= 1 trillion. 
+
+Inspecting the graph, the dots stay close to the curve at every tested size for N. The dots do not lay exactly on the line, because each dot comes from only 1,000 random numbers, so randomness is expected. Also, the formula is not meant to be exact, rather an estimate. 
+
+```{r}
+ggplot(prime_sims, aes(x = N)) +
+  geom_function(fun = \(x) 1 / log(x), aes(color = "Prime Number Theorem: 1/ln(N)")) +
+  geom_point(aes(y = estimate, color = "Simulation estimate"), size = 2) +
+  scale_x_log10() +
+  labs(
+    title = "Primes around N get rarer as N increases",
+    subtitle = "1,000 random integers sampled between N and 2N for each N",
+    x = "N (log scale)",
+    y = "Proportion that are prime",
+    color = NULL
+  )
+```
+
+**Conclusion**
+
+So in conclusion, I wrote a function that tests primality, then estimated the proportion of primes around 11 different values of N by sampling and simulating, and then I compared my estimates to 1/ln(N). My simulation agrees with the Prime Number Theorem. Primes become rarer as N grows, but slowly, and at a predictable rate. In the future, I could make this simulation more accurate by drawing more samples. This would make my estimations less noisy. 

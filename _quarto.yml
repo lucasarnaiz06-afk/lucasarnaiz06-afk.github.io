@@ -16,6 +16,8 @@ website:
             href: lego.qmd
           - text: "Satoshi's Words"
             href: satoshi.qmd
+          - text: "Prime Numbers Simulation"
+            href: primes.qmd
 
 format:
   html:
