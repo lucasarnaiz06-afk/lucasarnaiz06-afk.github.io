@@ -18,6 +18,8 @@ website:
             href: satoshi.qmd
           - text: "Prime Numbers Simulation"
             href: primes.qmd
+      - text: "Data Ethics"
+        href: bitcoin-ethics.qmd
 
 format:
   html:

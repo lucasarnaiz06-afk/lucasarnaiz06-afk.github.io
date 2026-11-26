@@ -1,0 +1,73 @@
+---
+title: "Who's Watching the Blockchain?"
+description: |
+  The ethics of tracking Bitcoin users with data science
+author: "Lucas Arnaiz"
+date: "2026-11-25"
+format: html
+---
+
+**The Scenario**
+
+Bitcoin is a digital currency created by Satoshi Nakamoto in 2008. Every Bitcoin transaction is stored on a public database called the blockchain, which anybody can download. On the blockchain, you can't directly see who is conducting the transations. Instead, you see addresses, which are long strings that connected to real people's wallets. Because of this, many people think of Bitcoin as anonymous.
+
+**The data science part:** 
+
+Independant researchers, and later companies like Chainalysis, utilize powerful algorithms to group addresses together, where one person likely controls all of the grouped addresses. Then, they only need to link one of the grouped addresses to a real person's identity, which can be done through crypto exchanges that require identification. Once that is done, the entire group of addresses are identified. Companies like Chainalysis sell this tracking technology to government agencies like the U.S. Department of Justice (Schwartz, 2024).
+
+**The ethical dilemma:** 
+
+This tracking technology helps the government catch criminals who use Bitcoin to move their money, but it can also be used to track anybody who has ever used Bitcoin. This technology can make mistakes and link the wrong person to an address, and courts now use this technology as evidence. Is it okay to de-anonymize a public dataset? Who should have that power?
+
+
+**Sources**
+
+- **Nakamoto (2008):** the original Bitcoin paper. It describes the privacy that Bitcoin users were promised.
+- **Meiklejohn et al. (2013):** a research paper that invented and tested the algorithms for grouping Bitcoin addresses.
+- **Schwartz (2024):** a Fortune article about a court case where Chainalysis's methods were challenged.
+
+**Ethical Issues**
+
+**1. Consent**
+
+Informed consent means that people know how their data will be used and agree to it. Bitcoin users never specifically agreed to have their transactions grouped and linked to them, and the original Bitcoin paper actually told users that their privacy would be protected "by keeping public keys (addresses) anonymous" (Nakamoto, 2008). The researchers did not ask for permission either, instead they made purchases from exchanges, gambling sites, and other services to label addresses (Meiklejohn et al., 2013). One could argue that consent isn't needed because the data is public, but agreeing that your transactions are visible is different from agreeing that they can be linked back to you. 
+
+**2. Is the data identifiable?**
+
+The blockchain stores no names, so it appears anonymous, but in reality it isn't. Even Nakamoto warned that if one address is linked to its owner, "linking could reveal other transactions that belonged to the same owner" (Nakamoto, 2008). If two addresses are used together in one transaction, they likely belong to the same person. By labelling just 1,070 addresses from their own purchases, Meiklejohn et al. (2013) identified groups that spanned over 1.8 million addresses. Since the blockchain data is permanent, a transaction from years ago can still be traced today, so anonymity is never garunteed. 
+
+**3. Is the data used in unintended ways?**
+
+The blockchain is public by design, it is used so that everybody can check that nobody spends the same coin twice. It was not made to be a tracking tool. Regardless,  Meiklejohn et al. (2013) wrote that an "agency with subpeona power" could use their methods to see who is paying who. That is currently what is happening. Chainalysis is an "industry standard tool" for law enforcement (Schwartz, 2024). Catching criminals is a fair goal, but it is not what people expected when they used Bitcoin.
+
+**4. Manifesto #10: inviting criticism and discussing errors**
+
+The [Data Values and Principles manifesto](https://datapractices.org/manifesto/) says that data teams should invite fair criticism and openly discuss errors. To their credit, the researchers did this well. Meiklejohn et al. (2013) admitted one of their methods was "significantly less safe," and they properly reported its mistakes. 
+
+On the other hand, Chainalysis has been much less open. In the Bitcoin Fog court case, their analysis was used to connect a man named Roman Sterlingov to a money laundering service. An expert brought in for the defense said that Chanalysis's results were "unverifiable" and said that no outside group sets standards for these companies. Regardless, the judge still accepted the evidence, and Sterlingoc was convicted in March 2024 (Schwartz, 2024). The issue is that a private tool that outsiders cannot easily verify helped send somebody to prison.
+
+**Why Does it Matter?**
+
+I believe that analyzing the blockchain is often justified. The data is public, and utilizing it to catch criminals makes sense and is reasonable. To me, the larger issue is power.
+
+**Who benefits?**
+
+Governments gain a powerful way to track money. Companies like Chainalysis make a profit selling analysis of data that users created for free.
+
+**Who is harmed?** 
+
+Regular Bitcoin users, who were promised privacy and never agreed to be tracked. Also, defendants who have to argue against evidence from a private tool that has no outside checks (Schwartz, 2024).
+
+**Profit, surveillance or power?** 
+
+Mostly surveillance and power, with profit close behind. The original research was open about its methods and mistakes (Meiklejohn et al., 2013). But once companies began to sell these methods, the ability to track an entire financial system ended up with a few companies and the government agencies that pay them. 
+
+Bitcoin was created so that people wouldn't need a central authority, but now these tools mostly serve the authorities themselves. Catching criminals is a good thing, but the tools that are used to catch them should be open to outside review and criticism.
+
+**References**
+
+Meiklejohn, S., Pomarole, M., Jordan, G., Levchenko, K., McCoy, D., Voelker, G. M., and Savage, S. (2013), "A Fistful of Bitcoins: Characterizing Payments Among Men with No Names," in *Proceedings of the 2013 Internet Measurement Conference (IMC '13)*, Barcelona, Spain: ACM, pp. 127–140. <https://doi.org/10.1145/2504730.2504747>
+
+Nakamoto, S. (2008), "Bitcoin: A Peer-to-Peer Electronic Cash System." <https://bitcoin.org/bitcoin.pdf>
+
+Schwartz, L. (2024), "Crypto Tracing Is Revolutionizing Crime-Fighting, but Critics Call It a 'Junk Science.' Inside the Raging Debate over Blockchain Analytics," *Fortune*, March 13, 2024. <https://fortune.com/crypto/2024/03/13/blockchain-analysis-chainalysis-bitcoin-fog-law-enforcement/>
